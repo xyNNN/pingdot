@@ -1,8 +1,6 @@
-# PingDot
+<h1><img src="icon-preview.png" width="48" align="absmiddle" alt=""> PingDot</h1>
 
 A tiny macOS menu bar app that shows one dot: is your internet working?
-
-![PingDot icon](icon-preview.png)
 
 - 🟢 **Green** – connected
 - 🟡 **Yellow** – connected, but latency is high
