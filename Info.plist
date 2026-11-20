@@ -5,7 +5,7 @@
     <key>CFBundleName</key>
     <string>PingDot</string>
     <key>CFBundleIdentifier</key>
-    <string>de.philipp-braeutigam.pingdot</string>
+    <string>de.xpb.pingdot</string>
     <key>CFBundleExecutable</key>
     <string>PingDot</string>
     <key>CFBundleIconFile</key>
