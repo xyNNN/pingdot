@@ -24,13 +24,11 @@ func circle(_ radius: CGFloat) -> NSBezierPath {
     NSBezierPath(ovalIn: NSRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2))
 }
 
-// Ping-Wellen
-for (radius, alpha) in [(330.0, 0.14), (235.0, 0.30)] {
-    let ring = circle(radius)
-    ring.lineWidth = 26
-    green.withAlphaComponent(alpha).setStroke()
-    ring.stroke()
-}
+// Ring, in denselben Proportionen wie das Menüleisten-Symbol
+let ring = circle(280)
+ring.lineWidth = 58
+green.withAlphaComponent(0.6).setStroke()
+ring.stroke()
 
 // Der Punkt, mit leichtem Schein und Verlauf
 let glow = NSShadow()
@@ -39,9 +37,9 @@ glow.shadowBlurRadius = 70
 NSGraphicsContext.saveGraphicsState()
 glow.set()
 green.setFill()
-circle(130).fill()
+circle(135).fill()
 NSGraphicsContext.restoreGraphicsState()
-NSGradient(starting: rgb(120, 240, 150), ending: rgb(34, 180, 80))!.draw(in: circle(130), angle: -90)
+NSGradient(starting: rgb(120, 240, 150), ending: rgb(34, 180, 80))!.draw(in: circle(135), angle: -90)
 
 NSGraphicsContext.current?.flushGraphics()
 let png = rep.representation(using: .png, properties: [:])!
