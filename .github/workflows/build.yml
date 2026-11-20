@@ -1,0 +1,35 @@
+name: Build
+
+# Baut bei jedem Push und Pull Request eine Debug- und eine Release-Version
+# und hängt beide als Artefakte an den Lauf.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: Build (${{ matrix.configuration }})
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        configuration: [debug, release]
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build
+        run: CONFIGURATION=${{ matrix.configuration }} ./build.sh
+
+      - name: Check app bundle
+        run: |
+          lipo -archs build/PingDot.app/Contents/MacOS/PingDot
+          codesign --verify --verbose build/PingDot.app
+
+      - name: Zip app
+        run: ditto -c -k --keepParent build/PingDot.app "build/PingDot-${{ matrix.configuration }}.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PingDot-${{ matrix.configuration }}
+          path: build/PingDot-${{ matrix.configuration }}.zip

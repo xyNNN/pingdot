@@ -1,0 +1,72 @@
+name: Release
+
+# Ein Tag wie v1.0.0 baut die App und legt ein GitHub-Release mit dem Zip an.
+# Manuell gestartet (workflow_dispatch) wird nur gebaut und das Zip als Artefakt angehängt.
+#
+# Signatur und Notarisierung laufen nur, wenn diese Secrets gesetzt sind;
+# sonst entsteht ein unsigniertes Zip:
+#   DEVELOPER_ID_P12     Developer-ID-Zertifikat samt Schlüssel als .p12, base64-kodiert
+#   P12_PASSWORD         Passwort der .p12-Datei
+#   APPLE_ID             Apple-ID für die Notarisierung
+#   APPLE_TEAM_ID        Team-ID
+#   APPLE_APP_PASSWORD   app-spezifisches Passwort
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-latest
+    env:
+      HAS_CERTIFICATE: ${{ secrets.DEVELOPER_ID_P12 != '' }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set version
+        run: |
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${GITHUB_REF_NAME#v}" Info.plist
+          fi
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $GITHUB_RUN_NUMBER" Info.plist
+
+      - name: Import signing certificate
+        if: env.HAS_CERTIFICATE == 'true'
+        env:
+          DEVELOPER_ID_P12: ${{ secrets.DEVELOPER_ID_P12 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+        run: |
+          KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(uuidgen)"
+          echo "$DEVELOPER_ID_P12" | base64 --decode > "$RUNNER_TEMP/certificate.p12"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security import "$RUNNER_TEMP/certificate.p12" -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN"
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN" >/dev/null
+          security list-keychains -d user -s "$KEYCHAIN"
+          rm "$RUNNER_TEMP/certificate.p12"
+          IDENTITY="$(security find-identity -v -p codesigning "$KEYCHAIN" | awk -F'"' '/Developer ID Application/ {print $2; exit}')"
+          echo "PINGDOT_IDENTITY=$IDENTITY" >> "$GITHUB_ENV"
+
+      - name: Build, sign and package
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+        run: ./release.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PingDot
+          path: build/PingDot-*.zip
+
+      - name: Create GitHub release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" build/PingDot-*.zip --title "PingDot ${GITHUB_REF_NAME#v}" --generate-notes
