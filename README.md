@@ -37,3 +37,7 @@ Needs the Xcode command line tools (`xcode-select --install`), nothing else.
 ## Limitations
 
 Some networks block ICMP ping (hotel Wi-Fi, some VPNs). There the dot stays red although the internet works.
+
+## License
+
+[MIT](LICENSE)
