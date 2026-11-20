@@ -1,14 +1,21 @@
 #!/bin/bash
-# Baut PingDot.app nach ./build. Mit `./build.sh install` zusätzlich nach /Applications kopieren und starten.
+# Baut PingDot.app (Apple Silicon + Intel) nach ./build.
+# Mit `./build.sh install` zusätzlich nach /Applications kopieren und starten.
 set -euo pipefail
 cd "$(dirname "$0")"
 
 APP="build/PingDot.app"
-rm -rf "$APP"
+rm -rf build
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp Info.plist "$APP/Contents/Info.plist"
 cp AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
-swiftc -O main.swift -o "$APP/Contents/MacOS/PingDot"
+
+for arch in arm64 x86_64; do
+    swiftc -O -target "$arch-apple-macos13.0" Sources/*.swift -o "build/PingDot-$arch"
+done
+lipo -create build/PingDot-arm64 build/PingDot-x86_64 -output "$APP/Contents/MacOS/PingDot"
+rm build/PingDot-arm64 build/PingDot-x86_64
+
 codesign --force --sign - "$APP"
 echo "Gebaut: $APP"
 
