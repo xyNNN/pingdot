@@ -8,12 +8,12 @@ A tiny macOS menu bar app that shows one dot: is your internet working?
 - 🟡 **Yellow** – connected, but latency is high
 - 🔴 **Red** – no connection
 
-PingDot pings a host (default `google.de`) every few seconds. Click the dot to see the current latency and open the settings.
+PingDot pings a host (default `google.de`) every second. Click the dot to see the current latency and open the settings.
 
 ## Settings
 
 - **Host** – what to ping
-- **Check every** – 2, 5, 10 or 30 seconds
+- **Check every** – 1, 2, 5, 10 or 30 seconds (default: 1)
 - **Yellow above** – latency threshold, 50 to 500 ms
 - **Launch at login**
 

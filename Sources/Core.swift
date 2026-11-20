@@ -14,9 +14,9 @@ enum Prefs {
     static let welcomeShownKey = "welcomeShown"
 
     static let defaultHost = "google.de"
-    static let defaultInterval = 5.0
+    static let defaultInterval = 1.0
     static let defaultThreshold = 150.0
-    static let intervalChoices = [2.0, 5.0, 10.0, 30.0]
+    static let intervalChoices = [1.0, 2.0, 5.0, 10.0, 30.0]
     static let thresholdChoices = [50.0, 100.0, 150.0, 300.0, 500.0]
 
     static let timeoutSeconds = 2

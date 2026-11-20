@@ -21,6 +21,7 @@ echo "Gebaut: $APP"
 
 if [ "${1:-}" = "install" ]; then
     pkill -x PingDot 2>/dev/null || true
+    while pgrep -x PingDot >/dev/null; do sleep 0.2; done   # sonst scheitert das erneute Öffnen gelegentlich
     rm -rf /Applications/PingDot.app
     cp -R "$APP" /Applications/PingDot.app
     open /Applications/PingDot.app
