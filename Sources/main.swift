@@ -3,8 +3,13 @@ import SwiftUI
 
 func dotImage(_ color: NSColor) -> NSImage {
     let image = NSImage(size: NSSize(width: 18, height: 18), flipped: false) { _ in
+        // Punkt mit Ring, damit er sich von den Kamera-/Mikrofon-Punkten von macOS unterscheidet
         color.setFill()
-        NSBezierPath(ovalIn: NSRect(x: 4, y: 4, width: 10, height: 10)).fill()
+        NSBezierPath(ovalIn: NSRect(x: 5.5, y: 5.5, width: 7, height: 7)).fill()
+        let ring = NSBezierPath(ovalIn: NSRect(x: 1.75, y: 1.75, width: 14.5, height: 14.5))
+        ring.lineWidth = 1.5
+        color.withAlphaComponent(0.6).setStroke()
+        ring.stroke()
         return true
     }
     image.isTemplate = false
