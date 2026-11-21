@@ -2,17 +2,17 @@
 
 A tiny macOS menu bar app that shows one dot: is your internet working?
 
-<p>
-  <img src="screenshots/menu.png" width="290" valign="top" alt="PingDot in the menu bar with its menu open">
-  <img src="screenshots/settings.png" width="330" valign="top" alt="Settings window">
-  <img src="screenshots/welcome.png" width="270" valign="top" alt="Welcome window shown on first launch">
-</p>
-
 - 🟢 **Green** – connected
 - 🟡 **Yellow** – connected, but latency is high
 - 🔴 **Red** – no connection
 
 PingDot pings a host (default `google.de`) every second. Click the dot to see the current latency and open the settings.
+
+## Screenshots
+
+| Menu bar | Settings | First launch |
+| :---: | :---: | :---: |
+| <img src="screenshots/menu.png" width="260" alt="PingDot in the menu bar with its menu open"> | <img src="screenshots/settings.png" width="260" alt="Settings window"> | <img src="screenshots/welcome.png" width="220" alt="Welcome window shown on first launch"> |
 
 ## Settings
 
