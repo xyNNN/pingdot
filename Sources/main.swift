@@ -49,6 +49,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             UserDefaults.standard.set(true, forKey: Prefs.welcomeShownKey)
             showWelcome()
         }
+
+        // Startargumente für die README-Screenshots
+        if CommandLine.arguments.contains("--settings") { showSettings() }
+        if CommandLine.arguments.contains("--open-menu") {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { self.statusItem.button?.performClick(nil) }
+        }
     }
 
     // MARK: Messen
