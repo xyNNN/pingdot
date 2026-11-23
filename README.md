@@ -28,7 +28,7 @@ The dot turns red after two failed pings in a row, so a single lost packet does 
 1. Download `PingDot-<version>.zip` from the [latest release](https://github.com/xyNNN/pingdot/releases/latest) and unzip it.
 2. Move `PingDot.app` to your Applications folder and open it.
 
-Version 1.0 is not yet signed with an Apple Developer ID, so macOS blocks the first launch. Open **System Settings → Privacy & Security**, scroll down and click **Open Anyway** next to the PingDot message. This is only needed once.
+PingDot is signed with an Apple Developer ID and notarized by Apple (since version 1.1.0).
 
 Requires macOS 13 or later, Apple Silicon or Intel.
 
